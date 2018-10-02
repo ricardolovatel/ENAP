@@ -1,5 +1,5 @@
 ---
-title: "An?lise dos CRAS"
+title: "Análise dos CRAS"
 author: "Ricardo Lovatel"
 
 output: html_document
@@ -34,10 +34,10 @@ diccras2017 <-  read_excel("C:/Users/ricardo.lovatel/Desktop/TCCENAP/DadosBrutos
 
 ```
 
-## Os arquivos que ser?o usados foram recuperados do link "https://aplicacoes.mds.gov.br/snas/vigilancia/index2.php",mantido pelo MDS 
+## Os arquivos que serão usados foram recuperados do link "https://aplicacoes.mds.gov.br/snas/vigilancia/index2.php",mantido pelo MDS 
 
 
-## Os arquivos originais foram tratados, sendo retiradas as informa??es que n?o ser?o usadas para este trabalho, como endere?o, nome e e-mail do respons?vel e outras destas naturezas. As informa??es s?o p?blicas.
+## Os arquivos originais foram tratados, sendo retiradas as informações que não serão usadas para este trabalho, como endereço, nome e e-mail do responsável e outras destas naturezas. As informações são públicas.
 
 
 
