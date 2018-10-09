@@ -22,5 +22,10 @@ head ( juizes_drogas_CL)
 
 write_rds(juizes_drogas_CL,"C:/Users/aluno.ENAP/Desktop/ENAP/juizes_drogas_CL.rds")
 
+
+juizes_drogas_CL
+
+
+
   
   
