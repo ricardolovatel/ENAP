@@ -57,5 +57,7 @@ diccras2017[, 2]
 
 ## Criar algumas tabelas 
 
+## Uma das atividades será classificar as variáveis. Para isto, devemos usar uma critério. 
+
 
 
