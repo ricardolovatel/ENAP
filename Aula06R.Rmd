@@ -1,0 +1,375 @@
+---
+title: "Trabalhando com dados amostrais"
+author: "Frederico Bertholini"
+subtitle: Aula 06
+output:
+  ioslides_presentation: 
+    widescreen: yes
+  beamer_presentation: default
+---
+
+
+```{r,eval=T,include=F}
+
+#lista.de.pacotes = c("tidyverse","lubridate","janitor","readxl","stringr","repmis","survey","srvyr") 
+# escreva a lista de pacotes
+#novos.pacotes <- lista.de.pacotes[!(lista.de.pacotes %in%
+#                                      installed.packages()[,"Package"])]
+#if(length(novos.pacotes) > 0) {install.packages(novos.pacotes)}
+#lapply(lista.de.pacotes, require, character.only=T)
+#rm(lista.de.pacotes,novos.pacotes)
+#gc()
+
+##knitr::opts_knit$set(root.dir = "/Volumes/Macintosh HD/OneDrive/ENAP/aulas_ENAP")
+
+```
+
+
+
+```{r}
+library ( tidyverse)
+library( lubridate)
+library(janitor)
+library(readxl)
+library(stringr)
+library(repmis)
+library(survey)
+library(srvyr)
+
+
+
+```
+
+
+
+
+
+
+```{r,eval=T,include=F}
+decisoes <- read_rds("C:/Users/aluno.ENAP/Desktop/ENAP/decisoes.rds")
+
+processos <- read_rds("C:/Users/aluno.ENAP/Desktop/ENAP/processos_nested.rds")
+
+```
+
+
+## Prepara√ß√£o para a aula
+
+- Baixe os dados da pasta exercÌcios (ou fa√ßa pull do seu GitHub)
+
+- Configure o GitHub na sua m·quina 
+
+ -- Versionamento -> <https://www.curso-r.com/blog/2017-07-17-rstudio-e-github/>
+
+ -- InstruÁıes adicionais de instalaÁ„oo <http://r-bio.github.io/git-installation/>
+
+- Rode todos os pacotes (usando o macetinho) --> pode baixar o script do exercÌcio 6, que j· tem tudo. 
+
+- RepositÛrio no GitHub <https://github.com/fredbsr/aulas_ENAP/tree/master/CADS2018>
+
+
+
+# Joins
+
+## Dados relacionais
+
+- Hadley Wickham <http://r4ds.had.co.nz/relational-data.html>
+
+## Principais fun√ß√µes 
+
+Para juntar tabelas, usar `inner_join`, `left_join`, `anti_join`, etc. 
+
+## Visualizando
+
+```{r, out.width="90%", echo=FALSE, fig.align='center',eval=F}
+knitr::include_graphics("CADS2018/Slides/imgs/join-venn.png")
+```
+
+
+
+## Exemplo de inner join:
+
+```{r eval=F}
+decisoes %>% 
+  filter(data_registro == "18/01/2018", !is.na(id_decisao)) %>% 
+  select(id_decisao, n_processo) %>% 
+  inner_join(processos, "n_processo")
+```
+
+## Exercicio em aula
+```{r eval=F}
+decisoes %>% 
+  filter(data_registro == "18/01/2018", !is.na(id_decisao)) %>% 
+  select(id_decisao, n_processo) %>% 
+  inner_join(
+    processos %>%
+    dplyr::select(n_processo, partes))
+  
+```
+
+
+
+
+
+
+
+##
+```{r echo=F}
+decisoes %>% 
+  filter(data_registro == "18/01/2018", !is.na(id_decisao)) %>% 
+  select(id_decisao, n_processo) %>% 
+  inner_join(processos, "n_processo")
+```
+
+
+
+## Exemplo de right join:
+
+
+```{r eval=F}
+decisoes %>% 
+  filter(data_registro == "18/01/2018", !is.na(id_decisao)) %>% 
+  select(id_decisao, n_processo) %>% 
+  right_join(processos, "n_processo")
+```
+
+##
+
+```{r echo=F}
+decisoes %>% 
+  filter(data_registro == "18/01/2018", !is.na(id_decisao)) %>% 
+  select(id_decisao, n_processo) %>% 
+  right_join(processos, "n_processo")
+```
+
+
+
+
+
+## ExercÌcio
+
+- Crie um objeto contendo informaÁıes sobre os tamanhos das bancadas dos partidos (arquivo `bancadas.rds`), suas respectivas coligaÁıes eleitorais para 2018 (arquivo `coligacoes.xlsx`) e o grau de concord‚ncia com a agenda do Gov Temer (arquivo `governismo_temer.xlsx`). 
+
+## Resolu√ß√£o
+
+## ExercÌcio
+
+Com base no objeto criado:
+
+- Crie uma coluna unindo partido e candidato, sem excluir as originais
+
+- BÙnus: use `group_by` e `summarise` para identificar 
+
+  -- qual candidato tem a coligaÁ„o com menor mÈdia de concord‚ncia e 
+  
+  -- qual candidato tem a coligaÁ„o com maior soma da propor√ß√£o total de assentos.
+
+## Resolu√ß√£o
+
+## Fun√ß√£o `expand.grid()` pode ser util
+
+```{r,eval=F}
+expand.grid(ano=c(2010:2012),mes=c(1:2))
+```
+
+
+##
+```{r,echo=F}
+expand.grid(ano=c(2010:2012),mes=c(1:2))
+```
+
+
+# Limpeza
+
+## Duplicatas
+
+Para retirar duplicatas, utilizar `distinct`. Ele considera apenas a primeira linha em que encontra um padr„o para as combinaÁıes de vari·veis escolhidas e descarta as demais.
+
+```{r eval=F}
+decisoes %>% 
+  distinct(municipio)
+```
+
+##
+
+```{r echo=F}
+decisoes %>% 
+  distinct(municipio)
+```
+
+
+
+## Por coluna
+
+Para manter as demais colunas, use `.keep_all=`:
+
+```{r eval=F}
+decisoes %>%
+  distinct(municipio, camara, 
+           .keep_all = TRUE)
+```
+
+##
+
+```{r echo=F}
+decisoes %>%
+  distinct(municipio, camara, 
+           .keep_all = TRUE)
+```
+
+
+
+## `janitor::get_dupes()`
+
+Use `janitor::get_dupes()` para averiguar os casos em que h√° repeti√ß√£o de combina√ß√µes de colunas.
+
+```{r eval=F}
+decisoes %>% 
+  get_dupes(n_processo)
+```
+
+
+##
+
+```{r echo=F}
+decisoes %>% 
+  get_dupes(n_processo)
+```
+
+## 
+
+- Janitor exemplos <http://sfirke.github.io/janitor/articles/janitor.html>
+
+- Missing e imputa√ß√£o <https://www.analyticsvidhya.com/blog/2016/03/tutorial-powerful-packages-imputing-missing-values/>
+
+- Outliers
+
+- `stringi` e `stringr`
+
+
+# srvyr
+
+## Refer√™ncias
+
+- Survey <http://r-survey.r-forge.r-project.org/survey/>
+
+- `srvyr` <https://cran.r-project.org/web/packages/srvyr/vignettes/srvyr-vs-survey.html>
+
+- Dados amostrais complexos ou alet√≥rias simples (apenas peso amostral)
+
+## Desenho amostral
+
+- `as_survey()`
+
+ -- ids
+ 
+ -- strata
+ 
+ -- fpc
+ 
+ -- nest
+ 
+ -- weights
+
+Pronto, agora trabalhe como se estivesse em um *tibble* `tbl_df` normal, que ser√° um `tbl_svy`
+
+## PNAD
+
+- PNADcIBGE <https://rpubs.com/BragaDouglas/335574>
+
+- ADSFree <http://asdfree.com/pesquisa-nacional-por-amostra-de-domicilios-continua-pnadc.html>
+
+## Este n√£o √© um curso de amostragem
+
+- Para maior aprofundamento, leia:
+
+ -- <http://r-survey.r-forge.r-project.org/svybook/>
+ 
+ -- <https://faculty.psau.edu.sa/filedownload/doc-12-pdf-532657fe8ef0e20eada1f34972a4b0dc-original.pdf>
+ 
+ -- <http://r-survey.r-forge.r-project.org/survey/survey-census.pdf>
+
+## Exemplo motivador
+
+```{r}
+data(api) #dados de desempenho escolar
+
+out <- apistrat %>%
+  mutate(hs_grad_pct = cut(hsg, c(0, 20, 100), include.lowest = TRUE,
+                           labels = c("<20%", "20+%"))) %>%
+  group_by(stype, hs_grad_pct) %>%
+  summarize(api_diff = weighted.mean(api00 - api99, pw),
+            n = n())
+
+```
+
+## Estimativas pontuais
+
+Vari√°vel `api-diff` 
+
+```{r, eval=F}
+ggplot(data = out, aes(x = stype, y = api_diff, group = hs_grad_pct, fill = hs_grad_pct)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  geom_text(aes(y = 0, label = n), position = position_dodge(width = 0.9), vjust = -1)
+```
+
+##
+```{r, echo=F}
+ggplot(data = out, aes(x = stype, y = api_diff, group = hs_grad_pct, fill = hs_grad_pct)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  geom_text(aes(y = 0, label = n), position = position_dodge(width = 0.9), vjust = -1)
+```
+
+
+## Estimativas intervalares
+
+- `survey_total`
+
+- `survey_mean`
+
+## Exemplos
+
+
+## Exerc√?cio
+
+- Carregue 
+
+- usando
+
+- tente construir um gr√°fico 
+
+## Resolu√ß√£o
+```{r}
+strat_design <- apistrat %>%
+  as_survey(strata = stype, fpc = fpc, weight  = pw)
+```
+
+## 
+```{r}
+
+out <- strat_design %>%
+  mutate(hs_grad_pct = cut(hsg, c(0, 20, 100), include.lowest = TRUE,
+                           labels = c("<20%", "20+%"))) %>%
+  group_by(stype, hs_grad_pct) %>%
+  summarize(api_diff = survey_mean(api00 - api99, vartype = "ci"),
+            n=unweighted(n()))
+
+```
+
+
+##
+
+```{r}
+
+out %>% 
+  ggplot(aes(x = stype, y = api_diff, group = hs_grad_pct, fill = hs_grad_pct,
+                       ymax = api_diff_upp, ymin = api_diff_low)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  geom_errorbar(position = position_dodge(width = 0.9), width = 0.1) +
+  geom_text(aes(y = 0, label = n), position = position_dodge(width = 0.9), vjust = -1)
+```
+
+
+
+
+
