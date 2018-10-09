@@ -1,0 +1,61 @@
+---
+title: "Análise dos CRAS"
+author: "Ricardo Lovatel"
+
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+library("knitr")
+knitr::opts_chunk$set(echo = TRUE)
+##Instalando os pacotes necess?rios.
+##install.packages("readxl")
+library(ggplot2)
+##Requerendo os pacotes
+require(readxl)
+require(ggplot2)
+
+```
+
+
+<center>
+## Análise de Dados dos CRAS no ano de 2017
+<br>
+</center>
+
+```{r, warning=FALSE}
+##carregando em memoria
+
+##crasdadosabertos <- read_excel("C:/Users/ricardo.lovatel/Desktop/RMA_17_CRAS_Divulga??o.xlsx",sheet = 4)
+censocras2017 <- read_excel("C:/Users/ricardo.lovatel/Desktop/TCCENAP/DadosBrutosCRAS/CensoSUAS 2017_CRAS.xlsx",sheet = 1)
+
+diccras2017 <-  read_excel("C:/Users/ricardo.lovatel/Desktop/TCCENAP/DadosBrutosCRAS/CensoSUAS 2017_CRAS.xlsx",sheet = 2)
+
+```
+
+## Os arquivos que serão usados foram recuperados do link "https://aplicacoes.mds.gov.br/snas/vigilancia/index2.php",mantido pelo MDS 
+
+
+## Os arquivos originais foram tratados, sendo retiradas as informações que não serão usadas para este trabalho, como endereço, nome e e-mail do responsável e outras destas naturezas. As informações são públicas.
+
+
+
+```{r}
+head (censocras2017)
+
+summary(censocras2017$q1)
+
+
+head (diccras2017)
+
+diccras2017[, 2]
+
+
+```
+
+
+## Criar algumas tabelas 
+
+
+
